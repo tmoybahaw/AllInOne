@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,19 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maruya Movie Player</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
       background: #121212;
       color: #fff;
+      overflow: hidden;
     }
 
     header {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
+      justify-content: space-between;
       padding: 10px 20px;
       background: #1f1f1f;
-      flex-wrap: wrap;
       gap: 10px;
     }
 
@@ -33,8 +42,8 @@
 
     header .search {
       flex-grow: 1;
-      margin: 10px 20px;
       min-width: 200px;
+      margin: 10px 20px;
     }
 
     header .search input {
@@ -59,6 +68,7 @@
       border: none;
       color: #fff;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     nav#categoryTabs button:hover,
@@ -68,9 +78,9 @@
 
     .main {
       display: flex;
-      flex-direction: row;
-      height: calc(100vh - 100px);
+      height: calc(100vh - 108px); /* header + nav height */
       overflow: hidden;
+      flex-wrap: nowrap;
     }
 
     #playerContainer {
@@ -79,20 +89,19 @@
       background: #000;
       display: flex;
       flex-direction: column;
-      padding: 0;
-      margin: 0;
     }
 
     .player-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 */
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
       height: 0;
+      overflow: hidden;
     }
 
     #player {
       position: absolute;
-      top: 0;
+      top: 10;
       left: 0;
       width: 100%;
       height: 100%;
@@ -101,10 +110,10 @@
 
     #recommendationList {
       flex: 1;
-      overflow-y: auto;
+      min-width: 280px;
       background: #181818;
       padding: 16px;
-      min-width: 280px;
+      overflow-y: auto;
     }
 
     .card {
@@ -156,30 +165,50 @@
       100% { transform: rotate(360deg); }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .main {
         flex-direction: column;
         height: auto;
       }
 
       #recommendationList {
-        max-height: 300px;
+        max-height: 250px;
+      }
+
+      .player-wrapper {
+        padding-bottom: 56.25%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      header .search {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      header .search input {
+        max-width: 100%;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <div style="display:flex; align-items:center;">
+    <div style="display: flex; align-items: center;">
       <img src="https://i.imgur.com/cmOdVwr.png" alt="Logo">
       <h1>Maruya Movie Player</h1>
     </div>
     <div class="search">
       <input id="searchInput" placeholder="🔍 Search movies or shows…" />
     </div>
-    <div style="display:flex; align-items:center;">
+    <div style="display: flex; align-items: center;">
       <span>Go to TV Player</span>
-      <a href="https://salidaph.online/tv/index.html" target="_blank">
+      <a href="./tv.html" target="_blank">
         <img src="https://i.imgur.com/meqX8zC.png" alt="TV" height="32">
       </a>
     </div>
@@ -190,18 +219,14 @@
   <div class="main">
     <div id="playerContainer">
       <div class="player-wrapper">
-        <iframe
-          id="player"
-          src="https://player.videasy.net/tv/1399/1/1?nextEpisode=true&autoplayNextEpisode=true&episodeSelector=true&color=8B5CF6"
-          allowfullscreen
-          allow="autoplay; fullscreen; picture-in-picture"
-        ></iframe>
+        <iframe id="player" src="" allowfullscreen></iframe>
       </div>
+        <div id="messageArea"></div>
     </div>
     <aside id="recommendationList"><h2>Recommended</h2></aside>
   </div>
 
-  <div id="messageArea"></div>
+
 
   <script>
     const API_KEY = 'ba3885a53bc2c4f3c4b5bdc1237e69a0';
@@ -232,7 +257,7 @@
       const data = await res.json();
       showRecommendations(data.results);
       document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
-      if(document.querySelectorAll('#categoryTabs button')[idx]) {
+      if (document.querySelectorAll('#categoryTabs button')[idx]) {
         document.querySelectorAll('#categoryTabs button')[idx].classList.add('active');
       }
     }
@@ -252,8 +277,8 @@
           </div>`;
         card.onclick = () => {
           player.src = isMovie
-            ? \`https://player.videasy.net/movie/\${item.id}?autoplay=true\`
-            : \`https://player.videasy.net/tv/\${item.id}/1/1?nextEpisode=true&autoplayNextEpisode=true&episodeSelector=true&color=8B5CF6\`;
+            ? `https://player.videasy.net/movie/${item.id}`
+            : `https://player.videasy.net/tv/${item.id}/1/1?autoplayNextEpisode=true`;
         };
         recList.appendChild(card);
       });
