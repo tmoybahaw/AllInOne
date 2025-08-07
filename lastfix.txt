@@ -228,7 +228,7 @@
     </div>
     <div style="display: flex; align-items: center;">
       <span>Go to TV Player</span>
-      <a href="tv.html">
+      <a href="/tv">
         <img src="https://i.imgur.com/meqX8zC.png" alt="TV" height="32">
       </a>
     </div>
