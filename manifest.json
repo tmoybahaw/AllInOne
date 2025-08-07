@@ -1,0 +1,21 @@
+{
+  "name": "Maruya Movie Player",
+  "short_name": "Maruya Player",
+  "description": "A web-based movie player.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#1f1f1f",
+  "icons": [
+    {
+      "src": "/lg.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/tvh.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
