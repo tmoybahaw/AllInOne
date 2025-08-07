@@ -219,16 +219,15 @@
 </head>
 <body>
   <header>
-   <div style="display: flex; align-items: center; gap: 6px;">
+    <div style="display: flex; align-items: center; gap: 6px;">
   <a href="/" style="text-decoration: none; color: #fff; display: flex; align-items: center;">
     <img src="https://i.imgur.com/1FJGDbg.png" alt="Home" height="24" style="margin-right: 4px;">
-    <span>Home</span>
+    <h1>Home</h1>
   </a>
 </div>
     <div class="search">
       <input id="searchInput" placeholder="🔍 Search movies or shows…" />
     </div>
-  
     <div style="display: flex; align-items: center;">
       <span>Go to TV Player</span>
       <a href="/tv">
@@ -269,8 +268,7 @@
   { id: '9648', label: 'Mystery' },
   { id: '99', label: 'Documentary' },
   { id: '28', label: 'Action' },
-  { id: '16', label: 'Animation' },
-  { id: 'korean_tv', label: 'Korean TV Series' }  // ✅ New category
+  { id: '16', label: 'Animation' }
 ];
 
 
@@ -289,28 +287,18 @@
    async function loadCategory(catId, idx) {
   recList.innerHTML = '<div class="loading-spinner"></div>';
 
-  let url = '';
-
-  if (categoryId === 'trending') {
-    url = `https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}`;
-  } else if (categoryId === 'popular') {
-    url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
-  } else if (categoryId === 'top_rated') {
-    url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}`;
-  } else if (categoryId === 'upcoming') {
-    url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}`;
-  } else if (categoryId === 'korean_tv') {
-    // ✅ Fetch Korean TV series specifically
-    url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_original_language=ko`;
+  let url;
+  if (['trending', 'popular', 'top_rated', 'upcoming'].includes(catId)) {
+    const path = catId === 'trending' ? 'trending/all/week' : `movie/${catId}`;
+    url = `https://api.themoviedb.org/3/${path}?api_key=${API_KEY}&language=en-US`;
   } else {
-    // Fallback to genre-based
-    url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${categoryId}`;
+    // Genre-based search
+    url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=${catId}`;
   }
 
-  const response = await fetch(url);
-  const data = await response.json();
-  return data.results;
-
+  const res = await fetch(url);
+  const data = await res.json();
+  showRecommendations(data.results);
 
   document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
   if (document.querySelectorAll('#categoryTabs button')[idx]) {
