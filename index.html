@@ -1,46 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maruya Movie Player</title>
   <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#121212; color:#fff; }
-    header { display:flex; align-items:center; padding:10px 20px; background:#1f1f1f; flex-wrap:wrap; gap:10px; }
-    header img { height:40px; margin-right:10px; }
-    header h1 { margin:0; font-size:20px; }
-    header .search { flex-grow:1; margin:10px 20px; min-width:200px; }
-    header .search input { width:100%; max-width:400px; padding:8px 12px; border-radius:20px; border:none; background:#333; color:#fff; }
-    nav#categoryTabs { display:flex; overflow-x:auto; background:#1c1c1c; }
-    nav#categoryTabs button { padding:12px 16px; background:none; border:none; color:#fff; cursor:pointer; }
-    nav#categoryTabs button:hover, nav#categoryTabs button.active { background:#333; }
-    .main { display:flex; height:calc(100vh - 100px); overflow:hidden; flex-wrap:wrap; }
-    #playerContainer { flex:2; background:#000; min-width:300px; }
-    #player { width:100%; height:100%; border:none; }
-    #recommendationList { flex:1; overflow-y:auto; background:#181818; padding:16px; min-width:280px; }
-    .card { display:flex; margin-bottom:12px; cursor:pointer; position:relative; }
-    .card img { width:120px; height:70px; object-fit:cover; border-radius:4px; }
-    .card .info { margin-left:8px; font-size:14px; }
-    .card .info .title { font-weight:bold; color:#fff; }
-    .card .info .meta { color:#aaa; font-size:12px; }
-    #messageArea { padding: 10px; color: #ffa500; font-size: 12px; }
-    .loading-spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @media (max-width:768px) {
-      .main { flex-direction:column; }
-      #recommendationList { height:auto; max-height:250px; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: #1f1f1f;
+      gap: 10px;
+    }
+
+    header img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    header .search {
+      flex-grow: 1;
+      min-width: 200px;
+      margin: 10px 20px;
+    }
+
+    header .search input {
+      width: 100%;
+      max-width: 400px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: none;
+      background: #333;
+      color: #fff;
+    }
+
+    nav#categoryTabs {
+      display: flex;
+      overflow-x: auto;
+      background: #1c1c1c;
+    }
+
+    nav#categoryTabs button {
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    nav#categoryTabs button:hover,
+    nav#categoryTabs button.active {
+      background: #333;
+    }
+
+    .main {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      min-height: calc(100vh - 130px);
+    }
+
+    #playerContainer {
+      flex: 2;
+      min-width: 300px;
+      min-height: 220px;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #player {
+      width: 100%;
+      flex-grow: 1;
+      border: none;
+      min-height: 200px;
+    }
+
+    #recommendationList {
+      flex: 1;
+      min-width: 280px;
+      max-height: 100%;
+      overflow-y: auto;
+      background: #181818;
+      padding: 16px;
+    }
+
+    .card {
+      display: flex;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .card img {
+      width: 120px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .card .info {
+      margin-left: 8px;
+      font-size: 14px;
+    }
+
+    .card .info .title {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .card .info .meta {
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    #messageArea {
+      padding: 10px;
+      color: #ffa500;
+      font-size: 12px;
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1024px) {
+      .main {
+        flex-direction: column;
+      }
+
+      #playerContainer {
+        width: 100%;
+        min-height: 220px;
+      }
+
+      #recommendationList {
+        width: 100%;
+        max-height: none;
+        flex: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      header .search {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      header .search input {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <div style="display:flex; align-items:center;">
+    <div style="display: flex; align-items: center;">
       <img src="https://i.imgur.com/cmOdVwr.png" alt="Logo">
       <h1>Maruya Movie Player</h1>
     </div>
     <div class="search">
       <input id="searchInput" placeholder="🔍 Search movies or shows…" />
     </div>
-    <div style="display:flex; align-items:center;">
+    <div style="display: flex; align-items: center;">
       <span>Go to TV Player</span>
       <a href="https://salidaph.online/tv/index.html" target="_blank">
         <img src="https://i.imgur.com/meqX8zC.png" alt="TV" height="32">
@@ -88,7 +247,7 @@
       const data = await res.json();
       showRecommendations(data.results);
       document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
-      if(document.querySelectorAll('#categoryTabs button')[idx]) {
+      if (document.querySelectorAll('#categoryTabs button')[idx]) {
         document.querySelectorAll('#categoryTabs button')[idx].classList.add('active');
       }
     }
