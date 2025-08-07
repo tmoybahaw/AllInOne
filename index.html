@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,7 +100,7 @@
 
     #player {
       position: absolute;
-      top: 0;
+      top: 10;
       left: 0;
       width: 100%;
       height: 100%;
@@ -208,7 +207,7 @@
     </div>
     <div style="display: flex; align-items: center;">
       <span>Go to TV Player</span>
-      <a href="https://salidaph.online/tv/index.html" target="_blank">
+      <a href="./tv.html" target="_blank">
         <img src="https://i.imgur.com/meqX8zC.png" alt="TV" height="32">
       </a>
     </div>
@@ -221,11 +220,12 @@
       <div class="player-wrapper">
         <iframe id="player" src="" allowfullscreen></iframe>
       </div>
+        <div id="messageArea"></div>
     </div>
     <aside id="recommendationList"><h2>Recommended</h2></aside>
   </div>
 
-  <div id="messageArea"></div>
+
 
   <script>
     const API_KEY = 'ba3885a53bc2c4f3c4b5bdc1237e69a0';
