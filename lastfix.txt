@@ -230,7 +230,7 @@
   <div style="display: flex; align-items: center;">
    <span>Go to TV Player</span>
    <a href="/tv">
-    <img src="https://i.imgur.com/meqX8zC.png" alt="TV" height="32">
+    <img src="https://i.imgur.com/z4mNpxF.png" alt="TV" height="32">
    </a>
   </div>
  </header>
