@@ -12,7 +12,7 @@
         * {
             box-sizing: border-box;
         }
-
+    
         html, body {
             margin: 0;
             padding: 0;
@@ -22,7 +22,7 @@
             color: #fff;
             overflow: hidden;
         }
-
+    
         header {
             display: flex;
             flex-wrap: wrap;
@@ -32,23 +32,23 @@
             background: #1f1f1f;
             gap: 10px;
         }
-
+    
         header img {
             height: 40px;
             margin-right: 10px;
         }
-
+    
         header h1 {
             margin: 0;
             font-size: 20px;
         }
-
+    
         header .search {
             flex-grow: 1;
             min-width: 200px;
             margin: 10px 20px;
         }
-
+    
         header .search input {
             width: 100%;
             max-width: 400px;
@@ -58,13 +58,13 @@
             background: #333;
             color: #fff;
         }
-
+    
         nav#categoryTabs {
             display: flex;
             overflow-x: auto;
             background: #1c1c1c;
         }
-
+    
         nav#categoryTabs button {
             padding: 12px 16px;
             background: none;
@@ -73,19 +73,19 @@
             cursor: pointer;
             white-space: nowrap;
         }
-
+    
         nav#categoryTabs button:hover,
         nav#categoryTabs button.active {
             background: #333;
         }
-
+    
         .main {
             display: flex;
             height: calc(100vh - 108px);
             overflow: hidden;
             flex-wrap: nowrap;
         }
-
+    
         #playerContainer {
             flex: 2;
             min-width: 300px;
@@ -93,7 +93,7 @@
             display: flex;
             flex-direction: column;
         }
-
+    
         .player-wrapper {
             position: relative;
             width: 100%;
@@ -101,7 +101,7 @@
             height: 0;
             overflow: hidden;
         }
-
+    
         #player {
             position: absolute;
             top: 0;
@@ -110,7 +110,7 @@
             height: 100%;
             border: none;
         }
-
+    
         #recommendationList {
             flex: 1;
             min-width: 280px;
@@ -118,48 +118,48 @@
             padding: 16px;
             overflow-y: auto;
         }
-
+    
         .card {
             display: flex;
             margin-bottom: 12px;
             cursor: pointer;
         }
-
+    
         .card img {
             width: 120px;
             height: 70px;
             object-fit: cover;
             border-radius: 4px;
         }
-
+    
         .card .info {
             margin-left: 8px;
             font-size: 14px;
         }
-
+    
         .card .info .title {
             font-weight: bold;
             color: #fff;
         }
-
+    
         .card .info .meta {
             color: #aaa;
             font-size: 12px;
         }
-
+    
         #messageArea {
             padding: 10px;
             color: #ffa500;
             font-size: 12px;
         }
-
+    
         #nowWatching {
             padding: 10px;
             text-align: center;
             font-size: 16px;
             font-weight: bold;
         }
-
+    
         .loading-spinner {
             border: 4px solid rgba(255, 255, 255, 0.1);
             border-top: 4px solid #fff;
@@ -169,7 +169,7 @@
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
-
+    
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -178,9 +178,9 @@
                 transform: rotate(360deg);
             }
         }
-
+    
         /* Cbox Floating Button */
-        #cboxDrawerBtn {
+        #cboxDrawerBtn, #insDrawerBtn {
             position: fixed;
             bottom: 90px;
             right: 25px;
@@ -194,13 +194,18 @@
             z-index: 9998;
             transition: background-color 0.3s, transform 0.2s;
         }
-
-        #cboxDrawerBtn:hover {
+    
+        #cboxDrawerBtn:hover, #insDrawerBtn:hover {
             background-color: #0077cc;
             transform: scale(1.1);
         }
-
-        #cboxDrawer {
+        
+        #insDrawerBtn {
+             right: 95px;
+             bottom: 90px;
+        }
+    
+        #cboxDrawer, #insDrawer {
             position: fixed;
             right: -100%;
             top: 0;
@@ -215,18 +220,18 @@
             flex-direction: column;
             transition: right 0.3s ease-in-out;
         }
-
-        #cboxDrawer.open {
+    
+        #cboxDrawer.open, #insDrawer.open {
             right: 0;
         }
-
-        #cboxDrawer iframe {
+    
+        #cboxDrawer iframe, #insDrawer iframe {
             flex: 1;
             width: 100%;
             border: none;
         }
-
-        #cboxHeader {
+    
+        #cboxHeader, #insHeader {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -235,43 +240,43 @@
             font-size: 18px;
             border-bottom: 1px solid #333;
         }
-
-        #cboxHeader button {
+    
+        #cboxHeader button, #insHeader button {
             background: transparent;
             border: none;
             color: white;
             font-size: 20px;
             cursor: pointer;
         }
-
+    
         @media (max-width: 500px) {
-            #cboxDrawer {
+            #cboxDrawer, #insDrawer {
                 width: 100%;
             }
         }
-
+    
         @media (max-width: 1024px) {
             .main {
                 flex-direction: column;
                 height: auto;
             }
-
+    
             #recommendationList {
                 max-height: 250px;
             }
         }
-
+    
         @media (max-width: 600px) {
             header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
+    
             header .search {
                 width: 100%;
                 margin: 10px 0;
             }
-
+    
             .matrix-container {
                 display: flex;
                 justify-content: center;
@@ -279,7 +284,7 @@
                 margin: 20px auto;
                 height: 50px;
             }
-
+    
             #matrixType {
                 font-family: 'Courier New', monospace !important;
                 color: #00ff00 !important;
@@ -290,7 +295,7 @@
                 animation: blink 0.7s steps(1) infinite !important;
                 text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00 !important;
             }
-
+    
             header .search input {
                 max-width: 100%;
             }
@@ -308,9 +313,6 @@
         <div class="search">
             <input id="searchInput" placeholder="🔍 Search movies or shows…" />
         </div>
- 
-
-
         <div style="display: flex; align-items: center; gap: 10px;">
             <span>Go to TV Player</span>
             <a href="/tv">
@@ -318,7 +320,7 @@
             </a>
         </div>
     </header>
- 
+
     <nav id="categoryTabs"></nav>
 
     <div class="main">
@@ -326,18 +328,25 @@
             <div class="player-wrapper">
                 <iframe id="player" src="https://player.videasy.net/movie/1526559" allowfullscreen></iframe>
             </div>
-          
-                 <center>
-            
+            <center>
                 <div class="matrix-container">
                     <span id="matrixType">|</span>
                 </div>
+                <div id="nowWatching"></div>
                 <span id="visitor-counter">Loading...</span> visits
             </center>
-            <div id="nowWatching"></div>
-           
         </div>
         <aside id="recommendationList"><h2>Recommended</h2></aside>
+    </div>
+
+    <div id="insDrawerBtn" title="Instructions">❓</div>
+
+    <div id="insDrawer">
+        <div id="insHeader">
+            <span>INSTRUCTION</span>
+            <button onclick="closeinsDrawer()">✖</button>
+        </div>
+        <iframe src="read.html"></iframe>
     </div>
 
     <div id="cboxDrawerBtn" title="cbox">💬</div>
@@ -450,6 +459,32 @@
     </script>
 
     <script>
+        // Instruction Drawer + Swipe Close
+        const insDrawer = document.getElementById('insDrawer');
+        const insBtn = document.getElementById('insDrawerBtn');
+
+        insBtn.onclick = function () {
+            insDrawer.classList.add('open');
+        };
+
+        function closeinsDrawer() {
+            insDrawer.classList.remove('open');
+        }
+
+        let touchStartXins = 0;
+        let touchEndXins = 0;
+
+        insDrawer.addEventListener('touchstart', function (e) {
+            touchStartXins = e.changedTouches[0].screenX;
+        });
+
+        insDrawer.addEventListener('touchend', function (e) {
+            touchEndXins = e.changedTouches[0].screenX;
+            if (touchStartXins - touchEndXins > 50) {
+                closeinsDrawer();
+            }
+        });
+
         // Chat Drawer + Swipe Close
         const cboxDrawer = document.getElementById('cboxDrawer');
         const cboxBtn = document.getElementById('cboxDrawerBtn');
@@ -462,16 +497,16 @@
             cboxDrawer.classList.remove('open');
         }
 
-        let touchStartX = 0;
-        let touchEndX = 0;
+        let touchStartXcbox = 0;
+        let touchEndXcbox = 0;
 
         cboxDrawer.addEventListener('touchstart', function (e) {
-            touchStartX = e.changedTouches[0].screenX;
+            touchStartXcbox = e.changedTouches[0].screenX;
         });
 
         cboxDrawer.addEventListener('touchend', function (e) {
-            touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) {
+            touchEndXcbox = e.changedTouches[0].screenX;
+            if (touchStartXcbox - touchEndXcbox > 50) {
                 closecboxDrawer();
             }
         });
@@ -510,10 +545,10 @@
             appId: "1:967956534378:web:ac45dd49a6559cfa182613",
             measurementId: "G-ZE3WP4RDLL"
         };
-        
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        
+
         // Get a reference to the Firestore database
         const db = firebase.firestore();
 
