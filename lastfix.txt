@@ -1,385 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Maruya Movie Player</title>
- <link rel="manifest" href="/manifest.json" />
- <style>
-  * {
-   box-sizing: border-box;
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maruya Movie Player</title>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <link rel="manifest" href="/manifest.json" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-  html, body {
-   margin: 0;
-   padding: 0;
-   height: 100%;
-   font-family: Arial, sans-serif;
-   background: #121212;
-   color: #fff;
-   overflow: hidden;
-  }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #fff;
+            overflow: hidden;
+        }
 
-  header {
-   display: flex;
-   flex-wrap: wrap;
-   align-items: center;
-   justify-content: space-between;
-   padding: 10px 20px;
-   background: #1f1f1f;
-   gap: 10px;
-  }
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: #1f1f1f;
+            gap: 10px;
+        }
 
-  header img {
-   height: 40px;
-   margin-right: 10px;
-  }
+        header img {
+            height: 40px;
+            margin-right: 10px;
+        }
 
-  header h1 {
-   margin: 0;
-   font-size: 20px;
-  }
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
 
-  header .search {
-   flex-grow: 1;
-   min-width: 200px;
-   margin: 10px 20px;
-  }
+        header .search {
+            flex-grow: 1;
+            min-width: 200px;
+            margin: 10px 20px;
+        }
 
-  header .search input {
-   width: 100%;
-   max-width: 400px;
-   padding: 8px 12px;
-   border-radius: 20px;
-   border: none;
-   background: #333;
-   color: #fff;
-  }
+        header .search input {
+            width: 100%;
+            max-width: 400px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: none;
+            background: #333;
+            color: #fff;
+        }
 
-  nav#categoryTabs {
-   display: flex;
-   overflow-x: auto;
-   background: #1c1c1c;
-  }
+        nav#categoryTabs {
+            display: flex;
+            overflow-x: auto;
+            background: #1c1c1c;
+        }
 
-  nav#categoryTabs button {
-   padding: 12px 16px;
-   background: none;
-   border: none;
-   color: #fff;
-   cursor: pointer;
-   white-space: nowrap;
-  }
+        nav#categoryTabs button {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            white-space: nowrap;
+        }
 
-  nav#categoryTabs button:hover,
-  nav#categoryTabs button.active {
-   background: #333;
-  }
+        nav#categoryTabs button:hover,
+        nav#categoryTabs button.active {
+            background: #333;
+        }
 
-  .main {
-   display: flex;
-   height: calc(100vh - 108px);
-   overflow: hidden;
-   flex-wrap: nowrap;
-  }
+        .main {
+            display: flex;
+            height: calc(100vh - 108px);
+            overflow: hidden;
+            flex-wrap: nowrap;
+        }
 
-  #playerContainer {
-   flex: 2;
-   min-width: 300px;
-   background: #000;
-   display: flex;
-   flex-direction: column;
-  }
+        #playerContainer {
+            flex: 2;
+            min-width: 300px;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+        }
 
-  .player-wrapper {
-   position: relative;
-   width: 100%;
-   padding-bottom: 56.25%;
-   height: 0;
-   overflow: hidden;
-  }
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
 
-  #player {
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   border: none;
-  }
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
-  #recommendationList {
-   flex: 1;
-   min-width: 280px;
-   background: #181818;
-   padding: 16px;
-   overflow-y: auto;
-  }
+        #recommendationList {
+            flex: 1;
+            min-width: 280px;
+            background: #181818;
+            padding: 16px;
+            overflow-y: auto;
+        }
 
-  .card {
-   display: flex;
-   margin-bottom: 12px;
-   cursor: pointer;
-  }
+        .card {
+            display: flex;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
 
-  .card img {
-   width: 120px;
-   height: 70px;
-   object-fit: cover;
-   border-radius: 4px;
-  }
+        .card img {
+            width: 120px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
 
-  .card .info {
-   margin-left: 8px;
-   font-size: 14px;
-  }
+        .card .info {
+            margin-left: 8px;
+            font-size: 14px;
+        }
 
-  .card .info .title {
-   font-weight: bold;
-   color: #fff;
-  }
+        .card .info .title {
+            font-weight: bold;
+            color: #fff;
+        }
 
-  .card .info .meta {
-   color: #aaa;
-   font-size: 12px;
-  }
+        .card .info .meta {
+            color: #aaa;
+            font-size: 12px;
+        }
 
-  #messageArea {
-   padding: 10px;
-   color: #ffa500;
-   font-size: 12px;
-  }
+        #messageArea {
+            padding: 10px;
+            color: #ffa500;
+            font-size: 12px;
+        }
 
-  .loading-spinner {
-   border: 4px solid rgba(255, 255, 255, 0.1);
-   border-top: 4px solid #fff;
-   border-radius: 50%;
-   width: 40px;
-   height: 40px;
-   animation: spin 1s linear infinite;
-   margin: 20px auto;
-  }
+        #nowWatching {
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-  @keyframes spin {
-   0% { transform: rotate(0deg); }
-   100% { transform: rotate(360deg); }
-  }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
 
-  @media (max-width: 1024px) {
-   .main {
-    flex-direction: column;
-    height: auto;
-   }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
-   #recommendationList {
-    max-height: 250px;
-   }
+        /* Cbox Floating Button */
+        #cboxDrawerBtn {
+            position: fixed;
+            bottom: 90px;
+            right: 25px;
+            background-color: #00aaff;
+            color: white;
+            font-size: 26px;
+            padding: 14px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 9998;
+            transition: background-color 0.3s, transform 0.2s;
+        }
 
-   .player-wrapper {
-    padding-bottom: 56.25%;
-   }
-  }
+        #cboxDrawerBtn:hover {
+            background-color: #0077cc;
+            transform: scale(1.1);
+        }
 
-  @media (max-width: 600px) {
-   header {
-    flex-direction: column;
-    align-items: flex-start;
-   }
+        #cboxDrawer {
+            position: fixed;
+            right: -100%;
+            top: 0;
+            width: 400px;
+            max-width: 100%;
+            height: 100%;
+            background: #111;
+            color: white;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s ease-in-out;
+        }
 
-   header .search {
-    width: 100%;
-    margin: 10px 0;
-   }
+        #cboxDrawer.open {
+            right: 0;
+        }
 
-   .matrix-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto;
-    height: 50px;
-   }
+        #cboxDrawer iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
 
-   #matrixType {
-    font-family: 'Courier New', monospace !important;
-    color: #00ff00 !important;
-    font-size: 16px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    border-right: 2px solid #00ff00 !important;
-    animation: blink 0.7s steps(1) infinite !important;
-    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00 !important;
-   }
+        #cboxHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: #222;
+            font-size: 18px;
+            border-bottom: 1px solid #333;
+        }
 
-   header .search input {
-    max-width: 100%;
-   }
-  }
- </style>
+        #cboxHeader button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 500px) {
+            #cboxDrawer {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main {
+                flex-direction: column;
+                height: auto;
+            }
+
+            #recommendationList {
+                max-height: 250px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            header .search {
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .matrix-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 20px auto;
+                height: 50px;
+            }
+
+            #matrixType {
+                font-family: 'Courier New', monospace !important;
+                color: #00ff00 !important;
+                font-size: 16px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                border-right: 2px solid #00ff00 !important;
+                animation: blink 0.7s steps(1) infinite !important;
+                text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00 !important;
+            }
+
+            header .search input {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
- <header>
-  <div style="display: flex; align-items: center; gap: 6px;">
-   <a href="/" style="text-decoration: none; color: #fff; display: flex; align-items: center;">
-    <img src="https://i.imgur.com/1FJGDbg.png" alt="Home" height="24" style="margin-right: 4px;">
-    <h1>Home</h1>
-   </a>
-  </div>
-  <div class="search">
-   <input id="searchInput" placeholder="🔍 Search movies or shows…" />
-  </div>
-  <div style="display: flex; align-items: center;">
-   <span>Go to TV Player</span>
-   <a href="/tv">
-    <img src="https://i.imgur.com/z4mNpxF.png" alt="TV" height="32">
-   </a>
-  </div>
- </header>
+    <header>
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <a href="/" style="text-decoration: none; color: #fff; display: flex; align-items: center;">
+                <img src="ok.png" alt="Home" height="24" style="margin-right: 4px;">
+                <h1>Home</h1>
+            </a>
+        </div>
+        <div class="search">
+            <input id="searchInput" placeholder="🔍 Search movies or shows…" />
+        </div>
+ 
 
- <nav id="categoryTabs"></nav>
 
- <div class="main">
-  <div id="playerContainer">
-   <div class="player-wrapper">
-    <iframe id="player" src="https://player.videasy.net/movie/1526559" allowfullscreen></iframe>
-   </div>
-   <center>
-    <div class="matrix-container">
-     <span id="matrixType">|</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span>Go to TV Player</span>
+            <a href="/tv">
+                <img src="maruya.png" alt="TV" height="32">
+            </a>
+        </div>
+    </header>
+ 
+    <nav id="categoryTabs"></nav>
+
+    <div class="main">
+        <div id="playerContainer">
+            <div class="player-wrapper">
+                <iframe id="player" src="https://player.videasy.net/movie/1526559" allowfullscreen></iframe>
+            </div>
+          
+                 <center>
+            
+                <div class="matrix-container">
+                    <span id="matrixType">|</span>
+                </div>
+                <span id="visitor-counter">Loading...</span> visits
+            </center>
+            <div id="nowWatching"></div>
+           
+        </div>
+        <aside id="recommendationList"><h2>Recommended</h2></aside>
     </div>
-   </center>
 
-  </div>
-  <aside id="recommendationList"><h2>Recommended</h2></aside>
- </div>
+    <div id="cboxDrawerBtn" title="cbox">💬</div>
 
- <script>
-  const API_KEY = 'ba3885a53bc2c4f3c4b5bdc1237e69a0';
-  const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
-  const categories = [
-   { id: 'trending', label: 'Trending' },
-   { id: 'popular', label: 'Popular' },
-   { id: 'top_rated', label: 'Top Rated' },
-   { id: 'upcoming', label: 'Upcoming' },
-   { id: '10770', label: 'TV Movie' },
-   { id: '878', label: 'Science Fiction' },
-   { id: '10749', label: 'Romance' },
-   { id: '10764', label: 'Reality' },
-   { id: '9648', label: 'Mystery' },
-   { id: '99', label: 'Documentary' },
-   { id: '28', label: 'Action' },
-   { id: '16', label: 'Animation' }
-  ];
+    <div id="cboxDrawer">
+        <div id="cboxHeader">
+            <span>Cbox</span>
+            <button onclick="closecboxDrawer()">✖</button>
+        </div>
+        <iframe src="chat.html"></iframe>
+    </div>
 
-  const tabsEl = document.getElementById('categoryTabs');
-  const recList = document.getElementById('recommendationList');
-  const player = document.getElementById('player');
-  const searchInput = document.getElementById('searchInput');
+    <script>
+        const API_KEY = 'ba3885a53bc2c4f3c4b5bdc1237e69a0';
+        const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
+        const categories = [
+            { id: 'trending', label: 'Trending' },
+            { id: 'popular', label: 'Popular' },
+            { id: 'top_rated', label: 'Top Rated' },
+            { id: 'upcoming', label: 'Upcoming' },
+            { id: '10770', label: 'TV Movie' },
+            { id: '878', label: 'Science Fiction' },
+            { id: '10749', label: 'Romance' },
+            { id: '10764', label: 'Reality' },
+            { id: '9648', label: 'Mystery' },
+            { id: '99', label: 'Documentary' },
+            { id: '28', label: 'Action' },
+            { id: '16', label: 'Animation' }
+        ];
 
-  categories.forEach((cat, idx) => {
-   const btn = document.createElement('button');
-   btn.textContent = cat.label;
-   btn.onclick = () => loadCategory(cat.id, idx);
-   tabsEl.appendChild(btn);
-  });
+        const tabsEl = document.getElementById('categoryTabs');
+        const recList = document.getElementById('recommendationList');
+        const player = document.getElementById('player');
+        const searchInput = document.getElementById('searchInput');
+        const nowWatchingElement = document.getElementById('nowWatching');
 
-  async function loadCategory(catId, idx) {
-   recList.innerHTML = '<div class="loading-spinner"></div>';
-   let url;
-   if (['trending', 'popular', 'top_rated', 'upcoming'].includes(catId)) {
-    const path = catId === 'trending' ? 'trending/all/week' : `movie/${catId}`;
-    url = `https://api.themoviedb.org/3/${path}?api_key=${API_KEY}&language=en-US`;
-   } else {
-    url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=${catId}`;
-   }
-
-   const res = await fetch(url);
-   const data = await res.json();
-   showRecommendations(data.results);
-
-   document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
-   if (document.querySelectorAll('#categoryTabs button')[idx]) {
-    document.querySelectorAll('#categoryTabs button')[idx].classList.add('active');
-   }
-  }
-
-  function showRecommendations(arr) {
-   recList.innerHTML = '<h2>Recommended</h2>';
-   arr.forEach(item => {
-    const isMovie = item.media_type !== 'tv';
-    const posterPath = item.backdrop_path || item.poster_path;
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-     <img src="${posterPath ? IMAGE_BASE + posterPath : 'https://via.placeholder.com/120x70.png?text=No+Image'}" alt="${item.title || item.name} poster">
-     <div class="info">
-      <div class="title">${item.title || item.name}</div>
-      <div class="meta">⭐ ${item.vote_average?.toFixed(1) || '0'} • ${(item.release_date || item.first_air_date || '').split('-')[0]}</div>
-     </div>`;
-    card.onclick = () => {
-     player.src = isMovie
-      ? `https://player.videasy.net/movie/${item.id}`
-      : `https://player.videasy.net/tv/${item.id}/1/1?autoplayNextEpisode=true`;
-    };
-    recList.appendChild(card);
-   });
-  }
-
-  searchInput.addEventListener('input', async () => {
-   const q = searchInput.value.trim();
-   if (q.length < 2) return loadCategory('trending', 0);
-   recList.innerHTML = '<div class="loading-spinner"></div>';
-   const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&include_adult=false`);
-   const data = await res.json();
-   showRecommendations(data.results);
-  });
-
-    // The messageArea was missing in your last request, I've added it back in.
-    window.addEventListener("message", function (event) {
-      if (typeof event.data === "string") {
-        const messageArea = document.querySelector("#messageArea");
-        if (messageArea) {
-          messageArea.innerText = event.data;
-        }
-      }
-    });
-
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(registration => {
-          console.log('Service Worker registered with scope:', registration.scope);
-        }).catch(error => {
-          console.log('Service Worker registration failed:', error);
+        categories.forEach((cat, idx) => {
+            const btn = document.createElement('button');
+            btn.textContent = cat.label;
+            btn.onclick = () => loadCategory(cat.id, idx);
+            tabsEl.appendChild(btn);
         });
-      });
-    }
 
-  // Initial Load is now called after the service worker block
-  loadCategory('trending', 0);
- </script>
+        async function loadCategory(catId, idx) {
+            recList.innerHTML = '<div class="loading-spinner"></div>';
+            let url;
+            if (['trending', 'popular', 'top_rated', 'upcoming'].includes(catId)) {
+                const path = catId === 'trending' ? 'trending/all/week' : `movie/${catId}`;
+                url = `https://api.themoviedb.org/3/${path}?api_key=${API_KEY}&language=en-US`;
+            } else {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=${catId}`;
+            }
 
- <script>
-  const text = "Code by Ricky John Reusora";
-  const target = document.getElementById("matrixType");
+            const res = await fetch(url);
+            const data = await res.json();
+            showRecommendations(data.results);
 
-  function typeLoop() {
-   let i = 0;
-   target.textContent = "|";
+            document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
+            if (document.querySelectorAll('#categoryTabs button')[idx]) {
+                document.querySelectorAll('#categoryTabs button')[idx].classList.add('active');
+            }
+        }
 
-   function type() {
-    if (i <= text.length) {
-     target.textContent = text.slice(0, i) + "|";
-     i++;
-     setTimeout(type, 100);
-} else {
-setTimeout(typeLoop, 15000);
-}
-}
+        function showRecommendations(arr) {
+            recList.innerHTML = '<h2>Recommended</h2>';
+            arr.forEach(item => {
+                const isMovie = item.media_type !== 'tv';
+                const posterPath = item.backdrop_path || item.poster_path;
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${posterPath ? IMAGE_BASE + posterPath : 'https://via.placeholder.com/120x70.png?text=No+Image'}" alt="${item.title || item.name} poster">
+                    <div class="info">
+                        <div class="title">${item.title || item.name}</div>
+                        <div class="meta">⭐ ${item.vote_average?.toFixed(1) || '0'} • ${(item.release_date || item.first_air_date || '').split('-')[0]}</div>
+                    </div>`;
+                card.onclick = () => {
+                    player.src = isMovie ?
+                        `https://player.videasy.net/movie/${item.id}` :
+                        `https://player.videasy.net/tv/${item.id}/1/1?autoplayNextEpisode=true`;
+                    nowWatchingElement.textContent = `You are now watching: ${item.title || item.name}`;
+                };
+                recList.appendChild(card);
+            });
+            if (arr.length > 0) {
+                nowWatchingElement.textContent = `You are now watching: ${arr[0].title || arr[0].name}`;
+            }
+        }
 
-type();
- }
+        searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim();
+            if (q.length < 2) return loadCategory('trending', 0);
+            recList.innerHTML = '<div class="loading-spinner"></div>';
+            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&include_adult=false`);
+            const data = await res.json();
+            showRecommendations(data.results);
+        });
 
-window.addEventListener("load", typeLoop);
- </script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('Service Worker registered:', registration.scope);
+                }).catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+            });
+        }
+
+        loadCategory('trending', 0);
+    </script>
+
+    <script>
+        // Chat Drawer + Swipe Close
+        const cboxDrawer = document.getElementById('cboxDrawer');
+        const cboxBtn = document.getElementById('cboxDrawerBtn');
+
+        cboxBtn.onclick = function () {
+            cboxDrawer.classList.add('open');
+        };
+
+        function closecboxDrawer() {
+            cboxDrawer.classList.remove('open');
+        }
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        cboxDrawer.addEventListener('touchstart', function (e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        cboxDrawer.addEventListener('touchend', function (e) {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) {
+                closecboxDrawer();
+            }
+        });
+    </script>
+
+    <script>
+        const text = "Code by Ricky John Reusora";
+        const target = document.getElementById("matrixType");
+
+        function typeLoop() {
+            let i = 0;
+            target.textContent = "|";
+
+            function type() {
+                if (i <= text.length) {
+                    target.textContent = text.slice(0, i) + "|";
+                    i++;
+                    setTimeout(type, 100);
+                } else {
+                    setTimeout(typeLoop, 15000);
+                }
+            }
+            type();
+        }
+        window.addEventListener("load", typeLoop);
+    </script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyARo1Wp1Xgy3lJccK9Z1Dre9hJzAAkkess",
+            authDomain: "cbox-8ce72.firebaseapp.com",
+            projectId: "cbox-8ce72",
+            storageBucket: "cbox-8ce72.firebasestorage.app",
+            messagingSenderId: "967956534378",
+            appId: "1:967956534378:web:ac45dd49a6559cfa182613",
+            measurementId: "G-ZE3WP4RDLL"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Get a reference to the Firestore database
+        const db = firebase.firestore();
+
+        const counterRef = db.collection("visits").doc("main");
+
+        function updateCounter() {
+            if (!sessionStorage.getItem("visitorCounted")) {
+                counterRef.get().then((doc) => {
+                    let newCount = 1;
+                    if (doc.exists) {
+                        newCount = doc.data().count + 1;
+                    }
+                    counterRef.set({ count: newCount });
+                    document.getElementById("visitor-counter").textContent = newCount;
+                    sessionStorage.setItem("visitorCounted", "true");
+                }).catch((err) => {
+                    console.error("Visitor counter error:", err);
+                    document.getElementById("visitor-counter").textContent = "Offline";
+                });
+            } else {
+                counterRef.get().then((doc) => {
+                    if (doc.exists) {
+                        document.getElementById("visitor-counter").textContent = doc.data().count;
+                    }
+                }).catch((err) => {
+                    console.error("Visitor counter read error:", err);
+                    document.getElementById("visitor-counter").textContent = "Offline";
+                });
+            }
+        }
+
+        updateCounter();
+    </script>
 </body>
 </html>
