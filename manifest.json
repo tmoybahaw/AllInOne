@@ -13,9 +13,10 @@
       "type": "image/png"
     },
     {
-      "src": "/tvh.png",
+      "src": "/maruya.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ]
+
 }
