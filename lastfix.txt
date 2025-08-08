@@ -4,84 +4,144 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maruya Movie Player</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <link rel="manifest" href="/manifest.json" />
     <style>
+        /* General Styles */
         * {
             box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
     
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: Arial, sans-serif;
-            background: #121212;
-            color: #fff;
+            background: #0A0A0A; /* Deeper black for a premium feel */
+            color: #E0E0E0; /* Lighter text for better readability */
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
     
+        /* Header */
         header {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 20px;
-            background: #1f1f1f;
-            gap: 10px;
+            padding: 15px 30px;
+            background: #111;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            gap: 15px;
         }
     
-        header img {
-            height: 40px;
-            margin-right: 10px;
+        header .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #E0E0E0;
+            white-space: nowrap;
+        }
+    
+        header img.home-icon {
+            height: 30px;
         }
     
         header h1 {
             margin: 0;
-            font-size: 20px;
+            font-size: 24px;
+            font-weight: 700;
         }
     
         header .search {
             flex-grow: 1;
             min-width: 200px;
-            margin: 10px 20px;
+            margin: 0 20px;
         }
     
         header .search input {
             width: 100%;
-            max-width: 400px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: none;
-            background: #333;
+            max-width: 500px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid #333;
+            background: #2C2C2C;
             color: #fff;
+            transition: all 0.3s ease;
         }
     
+        header .search input:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+    
+        header .tv-player-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #A0A0A0;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+        
+        header .tv-player-link:hover {
+            color: #fff;
+        }
+        
+        header .tv-player-link img {
+            border-radius: 50%;
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+        
+        header .tv-player-link img:hover {
+            transform: scale(1.1);
+        }
+    
+        /* Category Tabs */
         nav#categoryTabs {
             display: flex;
             overflow-x: auto;
-            background: #1c1c1c;
+            background: #121212;
+            border-bottom: 1px solid #2C2C2C;
+            padding: 0 10px;
         }
     
         nav#categoryTabs button {
-            padding: 12px 16px;
+            padding: 14px 18px;
             background: none;
             border: none;
-            color: #fff;
+            color: #A0A0A0;
             cursor: pointer;
             white-space: nowrap;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
         }
     
-        nav#categoryTabs button:hover,
+        nav#categoryTabs button:hover {
+            color: #fff;
+            border-bottom-color: #A0A0A0;
+        }
+    
         nav#categoryTabs button.active {
-            background: #333;
+            color: #007BFF;
+            border-bottom-color: #007BFF;
         }
     
+        /* Main Content */
         .main {
             display: flex;
-            height: calc(100vh - 108px);
+            height: calc(100vh - 120px); /* Adjusted height */
             overflow: hidden;
             flex-wrap: nowrap;
         }
@@ -92,6 +152,7 @@
             background: #000;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
     
         .player-wrapper {
@@ -111,98 +172,136 @@
             border: none;
         }
     
+        /* Recommendation List */
         #recommendationList {
             flex: 1;
             min-width: 280px;
-            background: #181818;
-            padding: 16px;
+            background: #0F0F0F;
+            padding: 20px;
             overflow-y: auto;
+            border-left: 1px solid #1A1A1A;
+        }
+        
+        #recommendationList h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 600;
         }
     
         .card {
             display: flex;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             cursor: pointer;
+            background: #1A1A1A;
+            border-radius: 10px;
+            padding: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            align-items: center;
+        }
+    
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
         }
     
         .card img {
-            width: 120px;
-            height: 70px;
+            width: 150px;
+            height: 90px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: 8px;
         }
     
         .card .info {
-            margin-left: 8px;
+            margin-left: 15px;
             font-size: 14px;
         }
     
         .card .info .title {
-            font-weight: bold;
+            font-weight: 600;
             color: #fff;
+            margin-bottom: 4px;
+            line-height: 1.3;
         }
     
         .card .info .meta {
-            color: #aaa;
+            color: #A0A0A0;
             font-size: 12px;
         }
     
-        #messageArea {
-            padding: 10px;
-            color: #ffa500;
-            font-size: 12px;
-        }
-    
+        /* Other Components */
         #nowWatching {
-            padding: 10px;
+            padding: 15px;
             text-align: center;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 600;
+            background: #1A1A1A;
+            border-top: 1px solid #2C2C2C;
+            color: #007BFF;
         }
     
         .loading-spinner {
             border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #fff;
+            border-top: 4px solid #007BFF;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 40px auto;
         }
     
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
     
-        /* Cbox Floating Button */
+        /* Matrix Type Animation */
+        .matrix-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        #matrixType {
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #00ff00;
+            animation: blink 0.7s steps(1) infinite;
+            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+            padding-bottom: 5px; /* Add space below text */
+        }
+    
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+    
+        /* Cbox/Instruction Drawers */
         #cboxDrawerBtn, #insDrawerBtn {
             position: fixed;
-            bottom: 90px;
-            right: 25px;
-            background-color: #00aaff;
+            bottom: 30px;
+            right: 30px;
+            background-color: #007BFF;
             color: white;
-            font-size: 26px;
-            padding: 14px;
+            font-size: 30px;
+            padding: 18px;
             border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
             cursor: pointer;
             z-index: 9998;
             transition: background-color 0.3s, transform 0.2s;
         }
     
-        #cboxDrawerBtn:hover, #insDrawerBtn:hover {
-            background-color: #0077cc;
-            transform: scale(1.1);
-        }
-        
         #insDrawerBtn {
-             right: 95px;
-             bottom: 90px;
+            right: 100px;
+        }
+    
+        #cboxDrawerBtn:hover, #insDrawerBtn:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
         }
     
         #cboxDrawer, #insDrawer {
@@ -212,13 +311,13 @@
             width: 400px;
             max-width: 100%;
             height: 100%;
-            background: #111;
+            background: #0F0F0F;
             color: white;
-            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.5);
+            box-shadow: -6px 0 20px rgba(0, 0, 0, 0.7);
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            transition: right 0.3s ease-in-out;
+            transition: right 0.4s ease-in-out;
         }
     
         #cboxDrawer.open, #insDrawer.open {
@@ -235,34 +334,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
-            background-color: #222;
+            padding: 15px 20px;
+            background-color: #1A1A1A;
             font-size: 18px;
-            border-bottom: 1px solid #333;
+            font-weight: 600;
+            border-bottom: 1px solid #2C2C2C;
         }
     
         #cboxHeader button, #insHeader button {
             background: transparent;
             border: none;
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
         }
     
-        @media (max-width: 500px) {
-            #cboxDrawer, #insDrawer {
-                width: 100%;
-            }
-        }
-    
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .main {
                 flex-direction: column;
                 height: auto;
             }
-    
             #recommendationList {
-                max-height: 250px;
+                max-height: 400px;
+                min-width: unset;
+                overflow-y: auto;
+                border-left: none;
+                border-top: 1px solid #1A1A1A;
+            }
+            #playerContainer {
+                min-width: unset;
             }
         }
     
@@ -271,54 +372,37 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-    
             header .search {
                 width: 100%;
                 margin: 10px 0;
             }
-    
-            .matrix-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin: 20px auto;
-                height: 50px;
+            #cboxDrawer, #insDrawer {
+                width: 100%;
             }
-    
-            #matrixType {
-                font-family: 'Courier New', monospace !important;
-                color: #00ff00 !important;
-                font-size: 16px !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                border-right: 2px solid #00ff00 !important;
-                animation: blink 0.7s steps(1) infinite !important;
-                text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00 !important;
+            #cboxDrawerBtn {
+                right: 20px;
+                bottom: 20px;
             }
-    
-            header .search input {
-                max-width: 100%;
+            #insDrawerBtn {
+                right: 80px;
+                bottom: 20px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div style="display: flex; align-items: center; gap: 6px;">
-            <a href="/" style="text-decoration: none; color: #fff; display: flex; align-items: center;">
-                <img src="ok.png" alt="Home" height="24" style="margin-right: 4px;">
-                <h1>Home</h1>
-            </a>
-        </div>
+        <a href="/" class="logo-container">
+            <img src="ok.png" alt="Home" class="home-icon">
+            <h1>Home</h1>
+        </a>
         <div class="search">
-            <input id="searchInput" placeholder="🔍 Search movies or shows…" />
+            <input id="searchInput" placeholder="🔍 Search movies or shows..." />
         </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="/tv" class="tv-player-link" title="Go to TV Player">
             <span>Go to TV Player</span>
-            <a href="/tv">
-                <img src="maruya.png" alt="TV" height="32">
-            </a>
-        </div>
+            <img src="maruya.png" alt="TV" height="40">
+        </a>
     </header>
 
     <nav id="categoryTabs"></nav>
@@ -328,12 +412,12 @@
             <div class="player-wrapper">
                 <iframe id="player" src="https://player.videasy.net/movie/1526559" allowfullscreen></iframe>
             </div>
+            <div class="matrix-container">
+                <span id="matrixType">|</span>
+            </div>
+            <div id="nowWatching"></div>
             <center>
-                <div class="matrix-container">
-                    <span id="matrixType">|</span>
-                </div>
-                <div id="nowWatching"></div>
-                <span id="visitor-counter">Loading...</span> visits
+                 <span id="visitor-counter">Loading...</span> visits
             </center>
         </div>
         <aside id="recommendationList"><h2>Recommended</h2></aside>
@@ -376,22 +460,22 @@
             { id: '28', label: 'Action' },
             { id: '16', label: 'Animation' }
         ];
-
+    
         const tabsEl = document.getElementById('categoryTabs');
         const recList = document.getElementById('recommendationList');
         const player = document.getElementById('player');
         const searchInput = document.getElementById('searchInput');
         const nowWatchingElement = document.getElementById('nowWatching');
-
+    
         categories.forEach((cat, idx) => {
             const btn = document.createElement('button');
             btn.textContent = cat.label;
             btn.onclick = () => loadCategory(cat.id, idx);
             tabsEl.appendChild(btn);
         });
-
+    
         async function loadCategory(catId, idx) {
-            recList.innerHTML = '<div class="loading-spinner"></div>';
+            recList.innerHTML = '<h2>Recommended</h2><div class="loading-spinner"></div>';
             let url;
             if (['trending', 'popular', 'top_rated', 'upcoming'].includes(catId)) {
                 const path = catId === 'trending' ? 'trending/all/week' : `movie/${catId}`;
@@ -399,26 +483,36 @@
             } else {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=${catId}`;
             }
-
-            const res = await fetch(url);
-            const data = await res.json();
-            showRecommendations(data.results);
-
+    
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                showRecommendations(data.results);
+            } catch (error) {
+                recList.innerHTML = '<h2>Recommended</h2><p style="color:red; text-align:center;">Failed to load recommendations.</p>';
+                console.error("Failed to fetch data:", error);
+            }
+    
             document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
             if (document.querySelectorAll('#categoryTabs button')[idx]) {
                 document.querySelectorAll('#categoryTabs button')[idx].classList.add('active');
             }
         }
-
+    
         function showRecommendations(arr) {
             recList.innerHTML = '<h2>Recommended</h2>';
+            if (arr.length === 0) {
+                 recList.innerHTML += '<p style="text-align:center; color: #A0A0A0;">No results found.</p>';
+                 return;
+            }
+            
             arr.forEach(item => {
                 const isMovie = item.media_type !== 'tv';
                 const posterPath = item.backdrop_path || item.poster_path;
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <img src="${posterPath ? IMAGE_BASE + posterPath : 'https://via.placeholder.com/120x70.png?text=No+Image'}" alt="${item.title || item.name} poster">
+                    <img src="${posterPath ? IMAGE_BASE + posterPath : 'https://via.placeholder.com/150x90.png?text=No+Image'}" alt="${item.title || item.name} poster">
                     <div class="info">
                         <div class="title">${item.title || item.name}</div>
                         <div class="meta">⭐ ${item.vote_average?.toFixed(1) || '0'} • ${(item.release_date || item.first_air_date || '').split('-')[0]}</div>
@@ -431,20 +525,32 @@
                 };
                 recList.appendChild(card);
             });
-            if (arr.length > 0) {
+            if (arr.length > 0 && !searchInput.value.trim()) {
                 nowWatchingElement.textContent = `You are now watching: ${arr[0].title || arr[0].name}`;
             }
         }
-
-        searchInput.addEventListener('input', async () => {
-            const q = searchInput.value.trim();
-            if (q.length < 2) return loadCategory('trending', 0);
-            recList.innerHTML = '<div class="loading-spinner"></div>';
-            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&include_adult=false`);
-            const data = await res.json();
-            showRecommendations(data.results);
+    
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(async () => {
+                const q = searchInput.value.trim();
+                if (q.length < 2) {
+                    loadCategory('trending', 0);
+                    return;
+                }
+                recList.innerHTML = '<h2>Recommended</h2><div class="loading-spinner"></div>';
+                try {
+                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&include_adult=false`);
+                    const data = await res.json();
+                    showRecommendations(data.results);
+                } catch (error) {
+                    recList.innerHTML = '<h2>Recommended</h2><p style="color:red; text-align:center;">Failed to perform search.</p>';
+                    console.error("Failed to fetch search results:", error);
+                }
+            }, 500);
         });
-
+    
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').then(registration => {
@@ -454,56 +560,56 @@
                 });
             });
         }
-
+    
         loadCategory('trending', 0);
     </script>
-
+    
     <script>
         // Instruction Drawer + Swipe Close
         const insDrawer = document.getElementById('insDrawer');
         const insBtn = document.getElementById('insDrawerBtn');
-
+    
         insBtn.onclick = function () {
             insDrawer.classList.add('open');
         };
-
+    
         function closeinsDrawer() {
             insDrawer.classList.remove('open');
         }
-
+    
         let touchStartXins = 0;
         let touchEndXins = 0;
-
+    
         insDrawer.addEventListener('touchstart', function (e) {
             touchStartXins = e.changedTouches[0].screenX;
         });
-
+    
         insDrawer.addEventListener('touchend', function (e) {
             touchEndXins = e.changedTouches[0].screenX;
             if (touchStartXins - touchEndXins > 50) {
                 closeinsDrawer();
             }
         });
-
+    
         // Chat Drawer + Swipe Close
         const cboxDrawer = document.getElementById('cboxDrawer');
         const cboxBtn = document.getElementById('cboxDrawerBtn');
-
+    
         cboxBtn.onclick = function () {
             cboxDrawer.classList.add('open');
         };
-
+    
         function closecboxDrawer() {
             cboxDrawer.classList.remove('open');
         }
-
+    
         let touchStartXcbox = 0;
         let touchEndXcbox = 0;
-
+    
         cboxDrawer.addEventListener('touchstart', function (e) {
             touchStartXcbox = e.changedTouches[0].screenX;
         });
-
+    
         cboxDrawer.addEventListener('touchend', function (e) {
             touchEndXcbox = e.changedTouches[0].screenX;
             if (touchStartXcbox - touchEndXcbox > 50) {
@@ -511,15 +617,15 @@
             }
         });
     </script>
-
+    
     <script>
         const text = "Code by Ricky John Reusora";
         const target = document.getElementById("matrixType");
-
+    
         function typeLoop() {
             let i = 0;
             target.textContent = "|";
-
+    
             function type() {
                 if (i <= text.length) {
                     target.textContent = text.slice(0, i) + "|";
@@ -533,9 +639,9 @@
         }
         window.addEventListener("load", typeLoop);
     </script>
-
+    
     <script>
-        // Your web app's Firebase configuration
+        // Firebase Configuration (unchanged)
         const firebaseConfig = {
             apiKey: "AIzaSyARo1Wp1Xgy3lJccK9Z1Dre9hJzAAkkess",
             authDomain: "cbox-8ce72.firebaseapp.com",
@@ -545,15 +651,11 @@
             appId: "1:967956534378:web:ac45dd49a6559cfa182613",
             measurementId: "G-ZE3WP4RDLL"
         };
-
-        // Initialize Firebase
+    
         firebase.initializeApp(firebaseConfig);
-
-        // Get a reference to the Firestore database
         const db = firebase.firestore();
-
         const counterRef = db.collection("visits").doc("main");
-
+    
         function updateCounter() {
             if (!sessionStorage.getItem("visitorCounted")) {
                 counterRef.get().then((doc) => {
@@ -579,7 +681,7 @@
                 });
             }
         }
-
+    
         updateCounter();
     </script>
 </body>
