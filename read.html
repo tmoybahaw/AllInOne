@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MARUYATV & Movie Player</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#7dd3fc;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      color-scheme: dark;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#071028 0%, #0b1322 100%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+    }
+    .container{
+      max-width:900px;
+      margin:36px auto;
+      padding:28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      box-shadow: 0 6px 30px rgba(3,7,18,0.6);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    header h1{
+      margin:0 0 8px 0;
+      font-size:28px;
+      letter-spacing:-0.2px;
+    }
+    header p.lead{
+      margin:0 0 18px 0;
+      color:var(--muted);
+    }
+    hr{
+      border:0;
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+      margin:20px 0;
+    }
+
+    .features {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .features li{
+      list-style:none;
+      padding:10px 12px;
+      background:var(--glass);
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.02);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      color:#dcecfb;
+    }
+    .muted{ color:var(--muted); font-size:14px }
+
+    .section-title{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-weight:600;
+      margin:8px 0 12px 0;
+    }
+
+    .screenshot{
+      width:100%;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.03);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+      padding:6px;
+      box-sizing:border-box;
+    }
+    .screenshot img{ width:100%; height:auto; display:block; border-radius:8px; }
+
+    .install-list{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+    }
+
+    .video-link{
+      display:inline-block;
+      margin-top:6px;
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.02);
+      padding:14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    footer{
+      margin-top:22px;
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
+
+    @media (min-width:720px){
+      .features { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main">
+    <header>
+      <h1>📺 MARUYATV &amp; Movie Player</h1>
+      <p class="lead">Welcome to <strong>MARUYATV and Movie Player</strong> — your all-in-one streaming platform for TV channels and movies.</p>
+    </header>
+
+    <hr/>
+
+    <section>
+      <div class="section-title"><strong>✨ Features</strong></div>
+      <ul class="features" aria-label="features list">
+        <li>🎯 <strong>Cross-platform support</strong>: Works on <strong>Web Browsers</strong>, <strong>Windows PCs</strong>, and <strong>Android Devices</strong>.</li>
+        <li>🌙 <strong>Dark &amp; Light Theme Toggle</strong></li>
+        <li>⏯️ <strong>Resume from last played episode</strong></li>
+        <li>🔊 <strong>Volume &amp; mute presets</strong></li>
+        <li>📱 <strong>Installable app</strong> for offline-like experience</li>
+      </ul>
+    </section>
+
+    <hr/>
+
+    <section>
+      <div class="section-title"><strong>📌 Supported Devices</strong></div>
+      <p class="muted">Web Browser • Windows PC • Android Devices (via installable app)</p>
+    </section>
+
+    <hr/>
+
+    <section>
+      <div class="section-title"><strong>🚀 Getting Started</strong></div>
+
+      <h3>1️⃣ Set Display Name to Gain Access</h3>
+      <div class="card screenshot" aria-hidden="false">
+        <img src="https://github.com/user-attachments/assets/f37332f6-bfec-43b1-ba4f-884ff9700874" alt="Set Display Name to gain access" />
+      </div>
+
+      <hr/>
+
+      <h3>2️⃣ Download &amp; Install</h3>
+      <p class="muted">Click installer then follow the install steps.</p>
+
+      <div style="display:grid; gap:12px;">
+        <div class="card screenshot">
+          <img src="https://github.com/user-attachments/assets/a0e46a98-fb40-476b-bf2a-6c53306cf933" alt="Click installer" />
+        </div>
+
+        <div class="card screenshot">
+          <img src="https://github.com/user-attachments/assets/235851fa-13ec-4e7d-82bc-977d82693935" alt="Install" />
+        </div>
+      </div>
+    </section>
+
+    <hr/>
+
+    <section>
+      <div class="section-title"><strong>🖥 Windows PC App UI</strong></div>
+      <div class="card screenshot">
+        <img src="https://github.com/user-attachments/assets/a3972511-401f-4e73-86b1-0e58c1f93886" alt="Windows PC App UI" />
+      </div>
+    </section>
+
+    <hr/>
+
+    <section>
+      <div class="section-title"><strong>📱 Android App UI</strong></div>
+      <p class="muted">Watch the demo video below:</p>
+      <a class="video-link" href="https://drive.google.com/file/d/1EjSfNsvbWOkqqykzy6WkC_W1-pyW1QfZ/view?usp=sharing" target="_blank" rel="noopener noreferrer">🎥 Watch Demo Video</a>
+    </section>
+
+    <hr/>
+
+    <section>
+      <div class="section-title"><strong>📦 Installation</strong></div>
+
+      <h4>For Web</h4>
+      <ol class="install-list">
+        <li>Visit the website and set your display name.</li>
+      </ol>
+
+      <h4>For Windows</h4>
+      <ol class="install-list">
+        <li>Download the installer from the official link.</li>
+        <li>Run the installer and follow on-screen instructions.</li>
+        <li>Launch the app and enjoy.</li>
+      </ol>
+
+      <h4>For Android</h4>
+      <ol class="install-list">
+        <li>Open the web app in your browser.</li>
+        <li>Tap <strong>Install App</strong>.</li>
+        <li>Access the app from your home screen.</li>
+      </ol>
+    </section>
+
+    <hr/>
+
+    <section>
+      <div class="section-title"><strong>📄 License</strong></div>
+      <p class="muted">This project is licensed under the <strong>MIT License</strong> — feel free to modify and share.</p>
+
+      <p style="margin-top:8px;">💡 <em>Tip</em>: For best experience, install the app on your device to enjoy full-screen playback and faster navigation.</p>
+    </section>
+
+    <footer>
+      &copy; <span id="year"></span> MARUYATV &amp; Movie Player
+    </footer>
+  </main>
+
+  <script>
+    // set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
