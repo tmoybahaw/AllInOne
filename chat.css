@@ -1,54 +1,150 @@
-
-
-.chatbox-container {
-  background-image: url('https://wallpapercave.com/wp/wp2856269.gif');
-  width: 90%;
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 15px;
-  border-radius: 12px;
-  background-color: #1b1b1b; /* Changed from 'background' to 'background-color' */
-  color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+/* General Body Styles for consistency */
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
 }
 
-    .chatbox-container h5 {
-      text-align: center;
-      margin-bottom: 15px;
-      color: #00aaff;
-    }
-    .footer {
-      text-align: center;
-      margin-bottom: 15px;
-      color: #008000;
-    }
-    .chat-window {
-      height: 450px;
-      overflow-y: auto;
-      background: #111;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
+/* --- Chatbox Container --- */
+.chatbox-container {
+    background-image: url('https://wallpapercave.com/wp/wp2856269.gif');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    background-color: rgba(27, 27, 27, 0.8); /* Dark overlay for better text readability */
+    width: 90%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 16px; /* Smoother corners */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
 
-    #username, #message {
-      width: calc(50% - 12px);
-      padding: 8px;
-      margin: 4px;
-      border: none;
-      border-radius: 5px;
-    }
+.chatbox-container h5 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #00aaff;
+    font-size: 24px; /* Larger title */
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
 
-    button {
-      padding: 8px 14px;
-      background: #00aaff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+/* --- Chat Window --- */
+.chat-window {
+    flex-grow: 1; /* Allows the window to fill available space */
+    overflow-y: auto;
+    background: #0d0d0d;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    line-height: 1.6;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-    button:hover {
-      background: #007acc;
+/* --- Message Styling --- */
+.message {
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.message .username {
+    font-weight: 600;
+    margin-right: 8px;
+    color: #00aaff;
+}
+
+.message .text {
+    display: inline;
+}
+
+.message-self {
+    align-self: flex-end;
+    background-color: #007bff;
+    color: white;
+}
+
+.message-other {
+    align-self: flex-start;
+    background-color: #333;
+    color: #E0E0E0;
+}
+
+/* --- Input Area --- */
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+#username, #message {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #2c2c2c;
+    color: #E0E0E0;
+    transition: all 0.3s ease;
+}
+
+#username {
+    width: 25%;
+    font-weight: 600;
+}
+
+#message {
+    width: 55%;
+}
+
+#username:focus, #message:focus {
+    outline: none;
+    background-color: #383838;
+}
+
+button {
+    width: 20%;
+    padding: 12px;
+    background: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: #007acc;
+    transform: translateY(-2px);
+}
+
+/* --- Footer --- */
+.footer {
+    text-align: center;
+    padding-top: 20px;
+    color: #555;
+    font-size: 12px;
+}
+
+.footer p {
+    margin: 4px 0;
+}
+
+@media (max-width: 600px) {
+    .input-area {
+        flex-direction: column;
     }
+    #username, #message, button {
+        width: 100%;
+    }
+}
