@@ -13,7 +13,6 @@
     <link rel="manifest" href="/manifest.json" />
     
     <style>
-        /* (Styles unchanged from your code) */
         * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         html, body { margin: 0; padding: 0; height: 100%; background: #0A0A0A; color: #E0E0E0; overflow: hidden; }
         header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 15px 30px; background: #111; box-shadow: 0 2px 10px rgba(0,0,0,0.4); gap: 15px; }
@@ -37,13 +36,12 @@
         #player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         #recommendationList { flex: 1; min-width: 210px; background: #0F0F0F; padding: 20px; overflow-y: auto; border-left: 1px solid #1A1A1A; }
         #recommendationList h2 { font-size: 18px; margin-bottom: 20px; color: #fff; }
-        .card { display: flex; margin-bottom: 15px; cursor: pointer; background: #1A1A1A; border-radius: 10px; padding: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); align-items: center; }
+        .card { display: flex; margin-bottom: 15px; cursor: pointer; background: #1A1A1A; border-radius: 10px; padding: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); align-items: center; transition: transform 0.2s ease; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); }
         .card img { width: 150px; height: 90px; object-fit: cover; border-radius: 8px; }
         .card .info { margin-left: 15px; font-size: 14px; }
         .card .info .title { font-weight: 600; color: #fff; margin-bottom: 4px; }
         .card .info .meta { color: #A0A0A0; font-size: 12px; }
-      
         .loading-spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid #007BFF; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 40px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 1024px) { .main { flex-direction: column; } #recommendationList { max-height: 400px; border-top: 1px solid #1A1A1A; border-left: none; } }
@@ -72,7 +70,7 @@
             <div class="player-wrapper">
                 <iframe id="player" src="" allowfullscreen></iframe>
             </div>
-                  </div>
+        </div>
         <aside id="recommendationList"><h2>Recommended</h2></aside>
     </div>
 
@@ -98,7 +96,6 @@
         const recList = document.getElementById('recommendationList');
         const player = document.getElementById('player');
         const searchInput = document.getElementById('searchInput');
-       
 
         categories.forEach((cat, idx) => {
             const btn = document.createElement('button');
@@ -120,15 +117,15 @@
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-                showRecommendations(data.results);
+                showRecommendations(data.results || []);
             } catch (error) {
                 recList.innerHTML = '<h2>Recommended</h2><p style="color:red; text-align:center;">Failed to load recommendations.</p>';
                 console.error("Failed to fetch data:", error);
             }
 
             document.querySelectorAll('#categoryTabs button').forEach(b => b.classList.remove('active'));
-            if (document.querySelectorAll('#categoryTabs button')[idx]) {
-                document.querySelectorAll('#categoryTabs button')[idx].classList.add('active');
+            if (tabsEl.children[idx]) {
+                tabsEl.children[idx].classList.add('active');
             }
         }
 
@@ -140,7 +137,7 @@
             }
 
             arr.forEach((item, i) => {
-                const isMovie = item.media_type !== 'tv';
+                const isTV = (item.media_type === 'tv') || (item.first_air_date && !item.release_date);
                 const posterPath = item.backdrop_path || item.poster_path;
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -151,18 +148,16 @@
                         <div class="meta">⭐ ${item.vote_average?.toFixed(1) || '0'} • ${(item.release_date || item.first_air_date || '').split('-')[0]}</div>
                     </div>`;
                 card.onclick = () => {
-                    player.src = isMovie ?
-                        `https://player.videasy.net/movie/${item.id}` :
-                        `https://player.videasy.net/tv/${item.id}/1/1?autoplayNextEpisode=true`;
-                    nowWatchingElement.textContent = `You are now watching: ${item.title || item.name}`;
+                    player.src = isTV
+                        ? `https://player.videasy.net/tv/${item.id}/1/1?autoplayNextEpisode=true`
+                        : `https://player.videasy.net/movie/${item.id}`;
                 };
                 recList.appendChild(card);
 
                 if (i === 0 && !searchInput.value.trim()) {
-                    player.src = isMovie ?
-                        `https://player.videasy.net/movie/${item.id}` :
-                        `https://player.videasy.net/tv/${item.id}/1/1?autoplayNextEpisode=true`;
-                    nowWatchingElement.textContent = `You are now watching: ${item.title || item.name}`;
+                    player.src = isTV
+                        ? `https://player.videasy.net/tv/${item.id}/1/1?autoplayNextEpisode=true`
+                        : `https://player.videasy.net/movie/${item.id}`;
                 }
             });
         }
@@ -180,7 +175,7 @@
                 try {
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&include_adult=false`);
                     const data = await res.json();
-                    showRecommendations(data.results);
+                    showRecommendations(data.results || []);
                 } catch (error) {
                     recList.innerHTML = '<h2>Recommended</h2><p style="color:red; text-align:center;">Failed to perform search.</p>';
                     console.error("Failed to fetch search results:", error);
@@ -202,4 +197,3 @@
     </script>
 </body>
 </html>
-
