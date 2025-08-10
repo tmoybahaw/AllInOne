@@ -43,7 +43,7 @@
         .card .info { margin-left: 15px; font-size: 14px; }
         .card .info .title { font-weight: 600; color: #fff; margin-bottom: 4px; }
         .card .info .meta { color: #A0A0A0; font-size: 12px; }
-        #nowWatching { padding: 15px; text-align: center; font-size: 18px; font-weight: 600; background: #1A1A1A; border-top: 1px solid #2C2C2C; color: #007BFF; }
+      
         .loading-spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid #007BFF; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 40px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 1024px) { .main { flex-direction: column; } #recommendationList { max-height: 400px; border-top: 1px solid #1A1A1A; border-left: none; } }
@@ -72,9 +72,7 @@
             <div class="player-wrapper">
                 <iframe id="player" src="" allowfullscreen></iframe>
             </div>
-            <div id="nowWatching"></div>
-            <center><span id="visitor-counter">Loading...</span> visits</center>
-        </div>
+                  </div>
         <aside id="recommendationList"><h2>Recommended</h2></aside>
     </div>
 
@@ -100,7 +98,7 @@
         const recList = document.getElementById('recommendationList');
         const player = document.getElementById('player');
         const searchInput = document.getElementById('searchInput');
-        const nowWatchingElement = document.getElementById('nowWatching');
+       
 
         categories.forEach((cat, idx) => {
             const btn = document.createElement('button');
@@ -204,3 +202,4 @@
     </script>
 </body>
 </html>
+
