@@ -180,7 +180,7 @@
         /* Recommendation List */
         #recommendationList {
             flex: 1;
-            min-width: 280px;
+            min-width: 230px;
             background: #0F0F0F;
             padding: 20px;
             overflow-y: auto;
